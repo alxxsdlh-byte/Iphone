@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>iPhone Unlock</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a1a;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: black;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            overflow: hidden;
+            position: relative;
+            border: 12px solid #000;
+        }
+        
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 28px;
+            background: black;
+            border-radius: 0 0 30px 30px;
+            z-index: 100;
+        }
+        
+        .status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 44px;
+            background: linear-gradient(180deg, #000 0%, transparent 100%);
+            z-index: 50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            color: white;
+            font-size: 12px;
+        }
+        
+        .status-left, .status-right {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding-top: 44px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 30px;
+            position: relative;
+        }
+        
+        .content {
+            text-align: center;
+            color: white;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 40px 20px;
+        }
+        
+        .icon {
+            font-size: 80px;
+            margin-bottom: 10px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 20px 0 10px;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+        
+        button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 18px 60px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+        }
+        
+        button:active {
+            transform: scale(0.95);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .fake-notification {
+            position: fixed;
+            top: 60px;
+            left: 10px;
+            right: 10px;
+            background: white;
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 1000;
+            margin: 0 auto;
+            width: calc(100% - 20px);
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .notification-title {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: #333;
+        }
+        
+        .notification-text {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .hack-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 375px;
+            height: 812px;
+            background: #000;
+            z-index: 5000;
+            display: none;
+            border-radius: 40px;
+            margin-left: 50%;
+            transform: translateX(-50%);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .hack-screen h2 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            animation: blink 0.5s infinite;
+            color: #ff4444;
+        }
+        
+        @keyframes blink {
+            0%, 49%, 100% { opacity: 1; }
+            50%, 99% { opacity: 0.3; }
+        }
+        
+        .hack-screen p {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff6666;
+            margin-top: 20px;
+            letter-spacing: 2px;
+        }
+        
+        .popup {
+            position: fixed;
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            z-index: 10000;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 280px;
+            animation: popupIn 0.2s ease-out;
+        }
+        
+        @keyframes popupIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .popup h3 {
+            color: #ff4444;
+            font-size: 20px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+        
+        .popup p {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        
+        .popup-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .popup-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .popup-btn.ok {
+            background: #ff4444;
+            color: white;
+        }
+        
+        .popup-btn.cancel {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .instructions {
+            position: absolute;
+            bottom: 20px;
+            color: rgba(255,255,255,0.7);
+            font-size: 11px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="notch"></div>
+        
+        <div class="status-bar">
+            <div class="status-left">
+                <span>9:41</span>
+            </div>
+            <div class="status-right">
+                <span>📶</span>
+                <span>📡</span>
+                <span>🔋</span>
+            </div>
+        </div>
+        
+        <div class="screen">
+            <div class="content">
+                <div class="icon">📱</div>
+                <h1>Desbloquea tu iPhone</h1>
+                <p class="subtitle">Gana crédito gratis ahora</p>
+                <button id="desbloquearBtn">DESBLOQUEAR</button>
+            </div>
+            <div class="instructions">Triple tap para cancelar</div>
+        </div>
+        
+        <div class="hack-screen" id="hackScreen">
+            <h2>⚠️ ALERTA ⚠️</h2>
+            <p>¡¡ FUISTE HACKEADO !!</p>
+            <p style="font-size: 16px; margin-top: 30px;">Tung Tung Sahur</p>
+        </div>
+    </div>
+    
+    <div class="fake-notification" id="fakeNotif">
+        <div class="notification-title">Alerta de Seguridad</div>
+        <div class="notification-text">Actividad sospechosa detectada</div>
+    </div>
+
+    <script>
+        var detenido = false;
+        var tapCount = 0;
+        var lastTapTime = 0;
+        var popupsActivos = [];
+        
+        document.addEventListener('click', function(e) {
+            var now = Date.now();
+            if (now - lastTapTime > 500) {
+                tapCount = 0;
+            }
+            tapCount++;
+            lastTapTime = now;
+            
+            if (tapCount >= 3) {
+                detenerTodo();
+            }
+        });
+        
+        document.getElementById('desbloquearBtn').addEventListener('click', function() {
+            this.disabled = true;
+            
+            // Mostrar notificación fake
+            var notif = document.getElementById('fakeNotif');
+            notif.style.display = 'block';
+            setTimeout(() => {
+                notif.style.display = 'none';
+            }, 2000);
+            
+            // Mostrar pantalla de "hackeado"
+            var hackScreen = document.getElementById('hackScreen');
+            hackScreen.style.display = 'flex';
+            
+            // Vibración si el dispositivo lo soporta
+            if (navigator.vibrate) {
+                navigator.vibrate([200, 100, 200, 100, 200]);
+            }
+            
+            setTimeout(() => {
+                hackScreen.style.display = 'none';
+                crearPopups();
+            }, 3500);
+        });
+        
+        function crearPopups() {
+            var mensajes = [
+                { titulo: '⚠️ ALERTA', texto: 'Virus detectado' },
+                { titulo: '🔓 DESBLOQUEADO', texto: 'Acceso otorgado' },
+                { titulo: '⚠️ HACKEADO', texto: 'Datos en riesgo' },
+                { titulo: '📱 ACCESO', texto: 'Sistema comprometido' },
+                { titulo: '🔐 SEGURIDAD', texto: '¡Tung Tung Sahur!' },
+                { titulo: '❌ ERROR CRÍTICO', texto: 'Reinicia el dispositivo' }
+            ];
+            
+            for (var i = 0; i < 25; i++) {
+                setTimeout(() => {
+                    if (detenido) return;
+                    
+                    var msg = mensajes[Math.floor(Math.random() * mensajes.length)];
+                    var popup = document.createElement('div');
+                    popup.className = 'popup';
+                    
+                    var left = Math.random() * (375 - 280);
+                    var top = 100 + Math.random() * (812 - 300);
+                    
+                    popup.style.left = left + 'px';
+                    popup.style.top = top + 'px';
+                    
+                    popup.innerHTML = `
+                        <h3>${msg.titulo}</h3>
+                        <p>${msg.texto}</p>
+                        <div class="popup-buttons">
+                            <button class="popup-btn ok">OK</button>
+                            <button class="popup-btn cancel">Cancelar</button>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(popup);
+                    popupsActivos.push(popup);
+                    
+                    setTimeout(() => {
+                        try { popup.remove(); }catch(e){}
+                    }, 4000);
+                }, i * 120);
+            }
+        }
+        
+        function detenerTodo() {
+            detenido = true;
+            
+            var hackScreen = document.getElementById('hackScreen');
+            hackScreen.style.display = 'none';
+            
+            for (var i = 0; i < popupsActivos.length; i++) {
+                try {
+                    popupsActivos[i].remove();
+                } catch(e) {}
+            }
+            
+            popupsActivos = [];
+            tapCount = 0;
+            
+            setTimeout(() => { detenido = false; }, 500);
+        }
+    </script>
+</body>
+</html>
